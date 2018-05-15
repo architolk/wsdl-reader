@@ -357,8 +357,14 @@ public class Generator {
           List<BindingOperation> wsdlBindingOperations = wsdlPort.getBinding().getBindingOperations();
           for (BindingOperation wsdlBindingOperation : wsdlBindingOperations) {
             System.out.println("    - BindingOperation: " + wsdlBindingOperation.getName());
-            Part wsdlPart = wsdlBindingOperation.getOperation().getInput().getMessage().getPart("body");
-            System.out.println("      - Input: " + wsdlPart.getElementName());
+            Map<String, Part> wsdlInputParts = wsdlBindingOperation.getOperation().getInput().getMessage().getParts();
+            for (Part wsdlPart : wsdlInputParts.values()) {
+              System.out.println("      - Input:  " + wsdlPart.getElementName());
+            }
+            Map<String, Part> wsdlOutputParts = wsdlBindingOperation.getOperation().getOutput().getMessage().getParts();
+            for (Part wsdlPart : wsdlOutputParts.values()) {
+              System.out.println("      - Output: " + wsdlPart.getElementName());
+            }
             System.out.println("========");
             String msg = buildSoapMessageFromOutput(new SchemaDefinitionWrapper(wsdlDefinition, wsdlURL.toString()), wsdlPort.getBinding(), wsdlBindingOperation, SoapContext.DEFAULT);
             System.out.println(msg);
