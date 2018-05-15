@@ -9,84 +9,87 @@
 		xmlns:ld="http://linkeddata/"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 >
-  <wsdl:types>
-	<xs:schema elementFormDefault="qualified" targetNamespace="http://example.org/webservice">
-	  <xs:element name="GetVehicleNames">
-		<xs:complexType>
-		  <xs:sequence>
-			<xs:element minOccurs="0" name="request" nillable="true" type="tns:GetVehicleNamesRequest" />
-		  </xs:sequence>
-		</xs:complexType>
-	  </xs:element>
-	  <xs:element name="GetVehicleNamesResponse">
-		<xs:complexType>
-		  <xs:sequence>
-			<xs:element minOccurs="0" name="GetVehicleNamesResult" nillable="true" type="tns:GetVehicleNamesResponse" />
-		  </xs:sequence>
-		</xs:complexType>
-	  </xs:element>
-	  <xs:complexType name="GetVehicleNamesRequest">
-		<xs:sequence>
-		  <xs:element minOccurs="0" name="CheckDate" type="xs:dateTime" />
-		</xs:sequence>
-	  </xs:complexType>
-	  <xs:element name="GetVehicleNamesRequest" nillable="true" type="tns:GetVehicleNamesRequest" />
-	  <xs:complexType name="GetVehicleNamesResponse">
-		<xs:sequence>
-		  <xs:element name="VehicleNames" nillable="true" type="tns:VehicleNames" />
-		</xs:sequence>
-	  </xs:complexType>
-	  <xs:element name="GetVehicleNamesResponse" nillable="true" type="tns:GetVehicleNamesResponse" />
-	  <xs:complexType name="VehicleNames">
-		<xs:sequence>
-		  <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string">
-			<xs:annotation ld:path="blaat"/>
-		  </xs:element>
-		</xs:sequence>
-	  </xs:complexType>
-	  <xs:element name="VehicleNames" nillable="true" type="tns:VehicleNames" />
-	  <xs:complexType name="VehicleFault">
-		<xs:sequence>
-		  <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
-		</xs:sequence>
-	  </xs:complexType>
-	  <xs:element name="VehicleFault" nillable="true" type="tns:VehicleFault" />
-	</xs:schema>
-  </wsdl:types>
-  <wsdl:message name="VehicleService_GetVehicleNames_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetVehicleNames" />
-  </wsdl:message>
-  <wsdl:message name="VehicleService_GetVehicleNames_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetVehicleNamesResponse" />
-  </wsdl:message>
-  <wsdl:message name="VehicleService_GetVehicleNames_VehicleFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="tns:VehicleFault" />
-  </wsdl:message>
-  <wsdl:portType name="VehicleService">
-    <wsdl:operation name="GetVehicleNames">
-      <wsdl:input wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNames" message="tns:VehicleService_GetVehicleNames_InputMessage" />
-      <wsdl:output wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesResponse" message="tns:VehicleService_GetVehicleNames_OutputMessage" />
-      <wsdl:fault wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesVehicleFaultFault" name="VehicleFaultFault" message="tns:VehicleService_GetVehicleNames_VehicleFaultFault_FaultMessage" />
-    </wsdl:operation>
-  </wsdl:portType>
-  <wsdl:binding name="basic" type="tns:VehicleService">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetVehicleNames">
-      <soap:operation soapAction="http://example.org/webservice/VehicleService/GetVehicleNames" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-      <wsdl:fault name="VehicleFaultFault">
-        <soap:fault name="VehicleFaultFault" use="literal" />
-      </wsdl:fault>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="VehicleWS">
-    <wsdl:port name="basic" binding="tns:basic">
-      <soap:address location="http://example.org/VehicleWS/basic" />
-    </wsdl:port>
-  </wsdl:service>
+	<wsdl:types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://example.org/webservice">
+			<!-- Input types -->
+			<xs:element name="GetVehicleNames">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="request" nillable="true" type="tns:GetVehicleNamesRequest" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:complexType name="GetVehicleNamesRequest">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="CheckDate" type="xs:dateTime" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="GetVehicleNamesRequest" nillable="true" type="tns:GetVehicleNamesRequest" />
+			<!-- Output types -->
+			<xs:element name="GetVehicleNamesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="GetVehicleNamesResult" nillable="true" type="tns:GetVehicleNamesResponse" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:complexType name="GetVehicleNamesResponse">
+				<xs:sequence>
+					<xs:element name="VehicleNames" nillable="true" type="tns:VehicleNames" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="GetVehicleNamesResponse" nillable="true" type="tns:GetVehicleNamesResponse" />
+			<xs:complexType name="VehicleNames">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string">
+						<xs:annotation ld:path="blaat"/>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="VehicleNames" nillable="true" type="tns:VehicleNames" />
+			<!-- Fault types -->
+			<xs:complexType name="VehicleFault">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="VehicleFault" nillable="true" type="tns:VehicleFault" />
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="VehicleService_GetVehicleNames_InputMessage">
+		<wsdl:part name="parameters" element="tns:GetVehicleNames" />
+	</wsdl:message>
+	<wsdl:message name="VehicleService_GetVehicleNames_OutputMessage">
+		<wsdl:part name="parameters" element="tns:GetVehicleNamesResponse" />
+	</wsdl:message>
+	<wsdl:message name="VehicleService_GetVehicleNames_VehicleFaultFault_FaultMessage">
+		<wsdl:part name="detail" element="tns:VehicleFault" />
+	</wsdl:message>
+	<wsdl:portType name="VehicleService">
+		<wsdl:operation name="GetVehicleNames">
+			<wsdl:input wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNames" message="tns:VehicleService_GetVehicleNames_InputMessage" />
+			<wsdl:output wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesResponse" message="tns:VehicleService_GetVehicleNames_OutputMessage" />
+			<wsdl:fault wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesVehicleFaultFault" name="VehicleFaultFault" message="tns:VehicleService_GetVehicleNames_VehicleFaultFault_FaultMessage" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="basic" type="tns:VehicleService">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetVehicleNames">
+			<soap:operation soapAction="http://example.org/webservice/VehicleService/GetVehicleNames" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="VehicleFaultFault">
+				<soap:fault name="VehicleFaultFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="VehicleWS">
+		<wsdl:port name="basic" binding="tns:basic">
+			<soap:address location="http://example.org/VehicleWS/basic" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>
