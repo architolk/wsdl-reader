@@ -16,8 +16,12 @@ import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
+import org.w3c.dom.Element;
 
 public class Generator {
+
+  private static final String DWS_NAMESPACE = "http://dotwebstack.org/wsdl-extension/";
+  private static final String DWS_INFOPROD = "informationProduct";
 
   public static void main(String[] args) {
 		
@@ -64,6 +68,15 @@ public class Generator {
           List<BindingOperation> wsdlBindingOperations = wsdlPort.getBinding().getBindingOperations();
           for (BindingOperation wsdlBindingOperation : wsdlBindingOperations) {
             System.out.println("    - BindingOperation: " + wsdlBindingOperation.getName());
+            Element docElement = wsdlBindingOperation.getOperation().getDocumentationElement();
+            /*
+            System.out.println("--- Documentation ---");
+            SoapUtils.printElement(docElement);
+            System.out.println("--- Documentation ---");
+            */
+            if (docElement.hasAttributeNS(DWS_NAMESPACE,DWS_INFOPROD)) {
+              System.out.println("      - Informationproduct: " + docElement.getAttributeNS(DWS_NAMESPACE,DWS_INFOPROD));
+            }
             Map<String, Part> wsdlInputParts = wsdlBindingOperation.getOperation().getInput().getMessage().getParts();
             for (Part wsdlPart : wsdlInputParts.values()) {
               System.out.println("      - Input:  " + wsdlPart.getElementName());

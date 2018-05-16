@@ -31,8 +31,13 @@ import java.util.*;
  * - removal of dependencies and code parts that are out of scope of SOAP message generation
  * - minor fixes to make the class compile out of soapUI's code base
  * - introduction of SoapContext class
+ *
+ * This class is further changed to be used as a template generator for the dotwebstack
+ * Changes done:
+ * - Added possibility to use annotations to add template instructions instead of sample values
+ *
  */
-
+ 
 /**
  * XmlBeans class for generating XML from XML Schemas
  */

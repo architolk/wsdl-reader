@@ -6,7 +6,7 @@
 		xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
 		xmlns:tns="http://example.org/webservice"
 		xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
-		xmlns:ld="http://linkeddata/"
+		xmlns:dws="http://dotwebstack.org/wsdl-extension/"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 >
 	<wsdl:types>
@@ -42,7 +42,7 @@
 			<xs:complexType name="VehicleNames">
 				<xs:sequence>
 					<xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string">
-						<xs:annotation ld:path="blaat"/>
+						<xs:annotation dws:path="blaat"/>
 					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
@@ -70,6 +70,7 @@
 			<wsdl:input wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNames" message="tns:VehicleService_GetVehicleNames_InputMessage" />
 			<wsdl:output wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesResponse" message="tns:VehicleService_GetVehicleNames_OutputMessage" />
 			<wsdl:fault wsaw:Action="http://example.org/webservice/VehicleService/GetVehicleNamesVehicleFaultFault" name="VehicleFaultFault" message="tns:VehicleService_GetVehicleNames_VehicleFaultFault_FaultMessage" />
+			<wsdl:documentation dws:informationProduct="http://example.org/IP/GetVehicleNames"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="basic" type="tns:VehicleService">

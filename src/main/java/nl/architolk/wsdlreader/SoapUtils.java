@@ -48,7 +48,7 @@ public class SoapUtils {
   /* *********************
    *
    *
-   * Made myself, getting the correct location
+   * Main public methods
    *
    *
    ********************* */
@@ -64,6 +64,35 @@ public class SoapUtils {
     }
   }
 
+  public static void printSchema(Definition definition, Schema schema) {
+    
+    Element schemaElement = schema.getElement(); 
+    Map<String, String> namespaces = definition.getNamespaces(); 
+    for( Entry<String, String> entry : namespaces.entrySet() ) { 
+      if ( entry.getKey().equals( "xmlns" ) || entry.getKey().trim().isEmpty() ) { 
+        continue; 
+      } 
+      if ( schemaElement.getAttribute( "xmlns:" + entry.getKey() ).isEmpty() ) { 
+        schemaElement.setAttribute( "xmlns:" + entry.getKey(), entry.getValue() ); 
+      } 
+    }
+    printElement(schemaElement);
+  }
+
+  public static void printElement(Element element) {
+    
+    try {
+      TransformerFactory transFactory = TransformerFactory.newInstance();
+      Transformer transformer = transFactory.newTransformer();
+      StringWriter buffer = new StringWriter();
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+      transformer.transform(new DOMSource(element), new StreamResult(buffer));
+      System.out.println(buffer.toString());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
   /* *********************
    *
    *
@@ -283,40 +312,6 @@ public class SoapUtils {
               }
           }
       }
-  }
-
-
-  
-  
-  /* *********************
-   *
-   *
-   * Made myself, main routine
-   *
-   *
-   ********************* */
-  public static void printSchema(Definition definition, Schema schema) {
-    
-    Element schemaElement = schema.getElement(); 
-    Map<String, String> namespaces = definition.getNamespaces(); 
-    for( Entry<String, String> entry : namespaces.entrySet() ) { 
-      if ( entry.getKey().equals( "xmlns" ) || entry.getKey().trim().isEmpty() ) { 
-        continue; 
-      } 
-      if ( schemaElement.getAttribute( "xmlns:" + entry.getKey() ).isEmpty() ) { 
-        schemaElement.setAttribute( "xmlns:" + entry.getKey(), entry.getValue() ); 
-      } 
-    }
-    try {
-      TransformerFactory transFactory = TransformerFactory.newInstance();
-      Transformer transformer = transFactory.newTransformer();
-      StringWriter buffer = new StringWriter();
-      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-      transformer.transform(new DOMSource(schemaElement), new StreamResult(buffer));
-      System.out.println(buffer.toString());
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
   }
 
 }
