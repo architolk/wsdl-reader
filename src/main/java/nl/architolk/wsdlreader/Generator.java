@@ -24,7 +24,7 @@ public class Generator {
   private static final String DWS_INFOPROD = "informationProduct";
 
   public static void main(String[] args) {
-		
+
     try {
       // Read the wsdl
       System.out.println("SOAP generator, starting");
@@ -35,7 +35,7 @@ public class Generator {
       Definition wsdlDefinition = wsdlReader.readWSDL(wsdlURL.toString());
       System.out.println("File loaded");
       System.out.println("=======================");
-      
+
       //Output the types defined in the wsdl
       System.out.println("Types:");
       Types wsdlTypes = wsdlDefinition.getTypes();
@@ -46,14 +46,16 @@ public class Generator {
           for (List<SchemaImport> includeList : includes.values()) {
             for (SchemaImport schemaImport : includeList) {
               Schema schema = schemaImport.getReferencedSchema();
-              SoapUtils.printSchema(wsdlDefinition, schema);
+              //SoapUtils.printSchema(wsdlDefinition, schema);
+              //SoapUtils.testXpath(wsdlDefinition, schema);
             }
           }
-          SoapUtils.printSchema(wsdlDefinition, (Schema) element);
-        } 
+          //SoapUtils.printSchema(wsdlDefinition, (Schema) element);
+          SoapUtils.testXpath(wsdlDefinition, (Schema) element);
+        }
       }
       System.out.println("=======================");
-      
+/*
       //Output the defined service and message-definition
       Map<String, Service> wsdlServices = wsdlDefinition.getServices();
       for (Service wsdlService : wsdlServices.values()) {
@@ -69,11 +71,11 @@ public class Generator {
           for (BindingOperation wsdlBindingOperation : wsdlBindingOperations) {
             System.out.println("    - BindingOperation: " + wsdlBindingOperation.getName());
             Element docElement = wsdlBindingOperation.getOperation().getDocumentationElement();
-            /*
-            System.out.println("--- Documentation ---");
-            SoapUtils.printElement(docElement);
-            System.out.println("--- Documentation ---");
-            */
+
+            //System.out.println("--- Documentation ---");
+            //SoapUtils.printElement(docElement);
+            //System.out.println("--- Documentation ---");
+
             if (docElement.hasAttributeNS(DWS_NAMESPACE,DWS_INFOPROD)) {
               System.out.println("      - Informationproduct: " + docElement.getAttributeNS(DWS_NAMESPACE,DWS_INFOPROD));
             }
@@ -85,7 +87,7 @@ public class Generator {
             for (Part wsdlPart : wsdlOutputParts.values()) {
               System.out.println("      - Output: " + wsdlPart.getElementName());
             }
-            
+
             //Build the SOAP response for the specific message
             System.out.println("========");
             String msg = SoapUtils.buildSoapMessageFromOutput(new SchemaDefinitionWrapper(wsdlDefinition, wsdlURL.toString()), wsdlPort.getBinding(), wsdlBindingOperation, SoapContext.DEFAULT);
@@ -94,7 +96,7 @@ public class Generator {
           }
         }
       }
-
+*/
     }
     catch (Exception e) {
       System.out.println(e.getMessage());

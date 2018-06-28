@@ -7,7 +7,7 @@
 		xmlns:tns="http://example.org/webservice"
 		xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
 		xmlns:dws="http://dotwebstack.org/wsdl-extension/"
-		xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
 	<wsdl:types>
 		<xs:schema elementFormDefault="qualified" targetNamespace="http://example.org/webservice">
@@ -21,7 +21,12 @@
 			</xs:element>
 			<xs:complexType name="GetVehicleNamesRequest">
 				<xs:sequence>
-					<xs:element minOccurs="0" name="CheckDate" type="xs:dateTime" />
+					<xs:element minOccurs="0" name="CheckDate" type="xs:dateTime">
+						<xs:annotation dws:parameter="checkdate"/>
+					</xs:element>
+					<xs:element minOccurs="0" name="Domaintable" type="xs:string">
+						<xs:annotation dws:parameter="name"/>
+					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
 			<xs:element name="GetVehicleNamesRequest" nillable="true" type="tns:GetVehicleNamesRequest" />
