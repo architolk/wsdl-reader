@@ -43,13 +43,11 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathConstants;
-import java.util.Iterator;
 
 public class SoapUtils {
 
@@ -72,9 +70,43 @@ public class SoapUtils {
     }
   }
 
+  public static void getParameter(String soapAction, Element typesElement) {
+    try {
+      //Factory and Xpath may be part of construction
+      XPathFactory xPathfactory = XPathFactory.newInstance();
+      XPath xpath = xPathfactory.newXPath();
+      xpath.setNamespaceContext(new WsdlNamespaceContext());
+      System.out.println("| Root element: " + soapAction);
+      XPathExpression expr = xpath.compile("xs:schema/xs:element[@name='" + soapAction + "']/xs:complexType/xs:sequence/xs:element");
+      Element mainElement = (Element) expr.evaluate(typesElement, XPathConstants.NODE);
+      if (mainElement==null) {
+        System.out.println("| Root element not found: Action not defined in types");
+        return;
+      }
+      System.out.println("| First element: " + mainElement.getAttribute("name"));
+      String paramName = mainElement.getAttribute("type");
+      String[] splitted = paramName.split(":");
+      if (splitted.length==2) {
+        paramName = splitted[1];
+      }
+      XPathExpression exprt = xpath.compile("xs:schema/xs:element[@name='" + soapAction + "']/@name");
+      XPathExpression expr2 = xpath.compile("xs:schema/xs:complexType[@name='" + paramName + "']/xs:complexContent/xs:extension/xs:sequence/xs:element");
+      NodeList nodes = (NodeList) expr2.evaluate(typesElement, XPathConstants.NODESET);
+      for (int i = 0; i < nodes.getLength(); i++) {
+        XPathExpression expr3 = xpath.compile("xs:annotation/@dws:parameter");
+        String param = (String) expr3.evaluate(nodes.item(i), XPathConstants.STRING);
+        if (!param.isEmpty()) {
+          System.out.println("| Input element: " + ((Element) nodes.item(i)).getAttribute("name"));
+          System.out.println("| - DWS-parameter: " + param);
+        }
+      }
+    } catch (XPathExpressionException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
   public static void testXpath(Definition definition, Schema schema) {
 
-    System.out.println("XXX");
     Element schemaElement = (Element) schema.getElement().getParentNode();
     Map<String, String> namespaces = definition.getNamespaces();
     for( Entry<String, String> entry : namespaces.entrySet() ) {
@@ -85,62 +117,7 @@ public class SoapUtils {
         schemaElement.setAttribute( "xmlns:" + entry.getKey(), entry.getValue() );
       }
     }
-    try {
-      XPathFactory xPathfactory = XPathFactory.newInstance();
-      XPath xpath = xPathfactory.newXPath();
-      xpath.setNamespaceContext(new NamespaceContext() {
-          public String getNamespaceURI(String prefix) {
-              if (prefix == null) throw new NullPointerException("Null prefix");
-              else if ("xs".equals(prefix)) return "http://www.w3.org/2001/XMLSchema";
-              else if ("dws".equals(prefix)) return "http://dotwebstack.org/wsdl-extension/";
-              else if ("xml".equals(prefix)) return XMLConstants.XML_NS_URI;
-              return XMLConstants.NULL_NS_URI;
-          }
-
-          // This method isn't necessary for XPath processing.
-          public String getPrefix(String uri) {
-              throw new UnsupportedOperationException();
-          }
-
-          // This method isn't necessary for XPath processing either.
-          public Iterator getPrefixes(String uri) {
-              throw new UnsupportedOperationException();
-          }
-      });
-      String action = "GetDomainTable";
-      System.out.println("TESTING: target namespace: " + schemaElement.getAttribute("targetNamespace"));
-      System.out.println("TESTING: root element: " + action);
-      XPathExpression expr = xpath.compile("xs:schema/xs:element[@name='" + action + "']/xs:complexType/xs:sequence/xs:element");
-      Element mainElement = (Element) expr.evaluate(schemaElement, XPathConstants.NODE);
-      if (mainElement==null) {
-        System.out.println("TESTING: not found");
-        return;
-      }
-      System.out.println("TESTING: first element: " + mainElement.getAttribute("name"));
-      String paramName = mainElement.getAttribute("type");
-      String[] splitted = paramName.split(":");
-      if (splitted.length==2) {
-        paramName = splitted[1];
-      }
-      System.out.println("TESTING: complextype: " + paramName);
-      XPathExpression exprt = xpath.compile("xs:schema/xs:element[@name='" + action + "']/@name");
-      System.out.println("TESTING: TEST: " + exprt.evaluate(schemaElement, XPathConstants.STRING));
-      XPathExpression expr2 = xpath.compile("xs:schema/xs:complexType[@name='" + paramName + "']/xs:complexContent/xs:extension/xs:sequence/xs:element");
-      NodeList nodes = (NodeList) expr2.evaluate(schemaElement, XPathConstants.NODESET);
-      for (int i = 0; i < nodes.getLength(); i++) {
-        System.out.println("TESTING: name of input element: " + ((Element) nodes.item(i)).getAttribute("name"));
-        XPathExpression expr3 = xpath.compile("xs:annotation/@dws:parameter");
-        String param = (String) expr3.evaluate(nodes.item(i), XPathConstants.STRING);
-        System.out.println("TESTING: name of DWS-parameter: " + param);
-        if (!param.isEmpty()) {
-          XPathExpression expr4 = xpath.compile("@name");
-          String name = (String) expr4.evaluate(nodes.item(i), XPathConstants.STRING);
-          System.out.println("TESTING: " + name);
-        }
-      }
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+    getParameter("GetDomainTable", schemaElement);
   }
 
   public static void printSchema(Definition definition, Schema schema) {

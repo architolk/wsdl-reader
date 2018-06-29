@@ -51,8 +51,11 @@ public class Generator {
             }
           }
           //SoapUtils.printSchema(wsdlDefinition, (Schema) element);
-          SoapUtils.testXpath(wsdlDefinition, (Schema) element);
+          //SoapUtils.testXpath(wsdlDefinition, (Schema) element);
         }
+      }
+      if (elements.get(0) instanceof SchemaImpl) {
+        SoapUtils.testXpath(wsdlDefinition, (Schema) elements.get(0));
       }
       System.out.println("=======================");
 /*
